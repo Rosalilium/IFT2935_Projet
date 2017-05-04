@@ -13,7 +13,7 @@ public class SQLHelper {
 	private final static String PW = "ndvp092N";
 
 	// Predefined query
-	private final static String SELECT_ALL_TABLES = "SELECT table_name FROM user_tables";
+	private final static String TEST = "SELECT nom_produit FROM Produit";
 
 	private Connection connection;
 
@@ -57,7 +57,7 @@ public class SQLHelper {
 		return null;
 	}
 
-	public ResultSet selectAllTables() {
-		return query(SELECT_ALL_TABLES);
+	public ResultSet queryTest() {
+		return query(TEST);
 	}
 }

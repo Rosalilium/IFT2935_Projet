@@ -12,7 +12,7 @@ public class HelperDriverTest {
     public static void main(String[] args) {
 
         SQLHelper helper = new SQLHelper();
-        ResultSet results = helper.selectAllTables();
+        ResultSet results = helper.queryTest();
 
 		if( results != null) {
 		    try {
