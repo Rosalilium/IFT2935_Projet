@@ -1,67 +1,63 @@
 package sql;
 
-import oracle.jdbc.driver.OracleDriver;
+import com.mysql.jdbc.Driver;
 import java.sql.*;
 
-// Mettre dans ce package tout ce qui est en lien avec le SQL. (connection au serveur,
-// requêtes, etc.)
-// Le nom de la classe peut être modifier c'était juste pour avoir quelque chose
-// dans le package.
-// On peut faire autant de classes que nécessaire dans ce package, mais l'idéal ce serait
-// que seul les méthodes de cette classe ci puisse être appelées par le GUI.
-// Bref, une seule classe dans le package "gui" communique avec une seule classe 
-// dans le package "sql".
+
 
 public class SQLHelper {
-	
-	final static String URL = "jdbc:oracle:thin:@oracle.iro.umontreal.ca:1521:orcl";
-	final static String USER = "lacombam";
-	final static String PW = "bamp108L";
-	
-	Connection connection;
-	
-	public void connect() {
-		
-	}
-	
-	ResultSet query(String query) {
-		
-		return null;
+
+	// Connection info
+	private final static String URL = "jdbc:mysql://www-ens.iro.umontreal.ca/nguyendv_ACHATLIGNE";
+	private final static String USER = "nguyendv_web";
+	private final static String PW = "ndvp092N";
+
+	// Predefined query
+	private final static String SELECT_ALL_TABLES = "SELECT table_name FROM user_tables";
+
+	private Connection connection;
+
+	/**
+	 * Void constructor
+	 */
+	public SQLHelper() {
+		connect();
 	}
 
-	/*public static void main(String[] args) {
-		
-		Connection connection = null;
-		
+	public boolean connect() {
 		try {
 			connection = DriverManager.getConnection(URL, USER, PW);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-		if (connection != null) {
-			System.out.println("Connection successful!");
-			
-			Statement statement = null;
-			
-			String query = "SELECT table_name FROM user_tables";
-			
+		return isConnected();
+	}
+
+	public boolean isConnected() {
+		return connection != null;
+	}
+
+	/**
+	 * Get query results from database
+	 */
+	public ResultSet query(String query) {
+		if (isConnected()) {
+
+			ResultSet resultSet = null;
+
 			try {
-				statement = connection.createStatement();
-				ResultSet resultSet = statement.executeQuery(query);
-				while(resultSet.next()) {
-					System.out.println(resultSet.getString(1));
-					System.out.println();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-		
-			
+				Statement statement = connection.createStatement();
+				resultSet = statement.executeQuery(query);
+				return resultSet;
 			}
-		} else {
-			System.out.println("Erreur");
-			System.exit(-1);
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
-	}*/
+		return null;
+	}
+
+	public ResultSet selectAllTables() {
+		return query(SELECT_ALL_TABLES);
+	}
 }
