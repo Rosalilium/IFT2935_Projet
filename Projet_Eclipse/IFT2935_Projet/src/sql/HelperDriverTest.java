@@ -4,17 +4,35 @@ package sql;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * Temporary driver to test SQLhelper
+/**\
+ * Temporary driver to test SQLhelper - TO BE DELETED
  */
 public class HelperDriverTest {
+
+    static String username = "Nanaxo";
+    static String password = "hhjj";
+    static String product = "Toyota Camry";
 
     public static void main(String[] args) {
 
         SQLHelper helper = new SQLHelper();
-        ResultSet results = helper.queryTest();
+        ResultSet results = helper.getExpertHistory(username);
 
-		if( results != null) {
+        ResultTableModel table = new ResultTableModel(results);
+
+        for (int i = 0 ; i < table.getRowCount(); i++) {
+            for (int j = 0 ; j < table.getColumnCount(); j++) {
+                System.out.println(table.getValueAt(i,j));
+                System.out.println();
+            }
+        }
+
+        System.out.println("Login : " + helper.isValidLogin(username, password));
+        System.out.println("Acheteur : " + helper.isBuyer(username));
+        System.out.println("Annonceur : " + helper.isSeller(username));
+        System.out.println("Expert : " + helper.isExpert(username));
+
+		/*if( results != null) {
 		    try {
                 while(results.next()) {
                     System.out.println(results.getString(1));
