@@ -12,7 +12,7 @@ public class SQLHelper {
 	private final static String USER = "nguyendv_web";
 	private final static String PW = "ndvp092N";
 
-	// Predefined query
+	// Query
 	private final static String TEST = "SELECT nom_produit FROM Produit";
 
 	private Connection connection;
@@ -60,4 +60,68 @@ public class SQLHelper {
 	public ResultSet queryTest() {
 		return query(TEST);
 	}
+
+	/**
+	 * Pour login
+	 * Vérifie si la combinaison de username et password est bien dans la base de données
+	 */
+	public boolean isValidLogin(String username, String password) {
+
+		ResultSet results = query("SELECT username, password FROM Usager WHERE username = '" + username + "' AND password = '" + password + "'");
+
+		return hasResults(results);
+	}
+
+	/**
+	 * Pour onglet acheteur
+	 * Verifie si l'usager est enregistre comme acheteur
+	 */
+	public boolean isAcheteur(String username) {
+
+		ResultSet results = query("SELECT username FROM Acheteur WHERE username = '" + username + "'");
+
+		return hasResults(results);
+
+	}
+
+	/**
+	 * Pour onglet Annonceur
+	 * Verifie si l'usager est enregistre comme annonceur
+	 */
+	public boolean isAnnonceur(String username) {
+
+		ResultSet results = query("SELECT username FROM Annonceur WHERE username = '" + username + "'");
+
+		return hasResults(results);
+
+	}
+
+	/**
+	 * Pour onglet Expert
+	 * Verifie si l'usager est enregistre comme annonceur
+	 */
+	public boolean isExpert(String username) {
+
+		ResultSet results = query("SELECT username FROM Expert WHERE username = '" + username + "'");
+
+		return hasResults(results);
+
+	}
+
+	// Helping method to test if results have been returned
+	private boolean hasResults (ResultSet results) {
+
+		if( results != null) {
+			try {
+				if (results.next()) {
+					return true;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+
+
 }

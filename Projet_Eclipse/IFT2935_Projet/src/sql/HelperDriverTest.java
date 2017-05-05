@@ -4,15 +4,23 @@ package sql;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
+/**\
  * Temporary driver to test SQLhelper
  */
 public class HelperDriverTest {
+
+    static String username = "Nanaxo";
+    static String password = "hhjj";
 
     public static void main(String[] args) {
 
         SQLHelper helper = new SQLHelper();
         ResultSet results = helper.queryTest();
+
+        System.out.println("Login : " + helper.isValidLogin(username, password));
+        System.out.println("Acheteur : " + helper.isAcheteur(username));
+        System.out.println("Annonceur : " + helper.isAnnonceur(username));
+        System.out.println("Expert : " + helper.isExpert(username));
 
 		if( results != null) {
 		    try {
