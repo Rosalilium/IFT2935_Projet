@@ -4,7 +4,7 @@ import javax.swing.*;
 
 // Panneau contennant les éléments pour la vue Vendeur.
 
-public class VendeurPanel extends JPanel{
+public class AnnonceurPanel extends JPanel{
 	
 	private MainPanel mainpanel;
 	private JLabel vente = new JLabel("En vente");
@@ -18,7 +18,7 @@ public class VendeurPanel extends JPanel{
 	private JScrollPane histoScroll;
 	private JLabel warning;
 
-	public VendeurPanel(MainPanel panel){
+	public AnnonceurPanel(MainPanel panel){
 		mainpanel = panel;
 		
 		JPanel vPanel = new JPanel();

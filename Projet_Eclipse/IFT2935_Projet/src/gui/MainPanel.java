@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import javax.swing.*;
 import javax.swing.table.TableModel;
 
+import sql.ResultTableModel;
 import sql.SQLHelper;
 
 // Panneau principal, contiendra les tabs.
@@ -24,7 +25,7 @@ public class MainPanel extends JPanel {
 	
 	public MainPanel(JFrame f){
 		frame = f;
-		//sql = new SQLHelper();
+		sql = new SQLHelper();
 		login = new LoginPanel(this);
 		tabs = new JTabbedPane();
 		this.setPreferredSize(new Dimension(950, 900));
@@ -41,15 +42,13 @@ public class MainPanel extends JPanel {
 	// Si ok créer les tabs, sinon afficher un message d'erreur
 	public void checkUserPassword(String username, String password){
 		
-		//TODO: Appeler la méthode de SQLHelper qui vérifie la validité du username/password
-		//      cette méthode devrait retourner true ou false.
-		//      On lui donne en paramètres le username et le password.
 		boolean ok = true;
+		ok = sql.isValidLogin(username, password);
 		
 		if(ok){
 			this.username = username;
 			tabs.add("Acheteur", new JScrollPane(new AcheteurPanel(this)));
-			tabs.addTab("Vendeur", new JScrollPane(new VendeurPanel(this)));
+			tabs.addTab("Annonceur", new JScrollPane(new AnnonceurPanel(this)));
 			tabs.add("Expert", new JScrollPane(new ExpertPanel(this)));
 			this.removeAll();
 			this.setLayout(new BorderLayout());
@@ -77,77 +76,54 @@ public class MainPanel extends JPanel {
 
 	// Vérifier si l'utilisateur est un expert
 	public boolean checkIfExpert(){
-		boolean res = true;
-		// TODO: Appeler la méthode de SQLHelper qui vérifie si un username est Expert.
-		//       On lui donne en paramètre le username. Elle retourne true/false.
-		return res;
+		return sql.isExpert(username);
 	}
 	
 	// Récupérer le tableau des produits à estimés faisant partie de la catégorie d'expertise
 	// de l'utilisateur.
-	public TableModel getProductsToEstimate(){
-		// TODO: Appeler la méthode de SQLHelper qui touve les produits à estimer.
-		//       On lui donne en paramètres le username.
-		//       Elle retourne soit une implémentation de AbstactTableModel ou un ResultSet.
-		//       Dans le second cas, la transformation en TableModel sera effectuée ici.
-		
-		return null;
+	public ResultTableModel getProductsToEstimate(){
+		ResultSet res = sql.getUnevaluatedProducts(username);
+		return new ResultTableModel(res);
 	}
 	
 	// Récupérer le tableau des produits estimés par l'utilisateur.
-	public TableModel getExpertHistorique(){
-		// TODO: Appeler la méthode de SQLHelper qui touve les produits déjà estimés par cet utilisateur.
-	    //       On lui donne en paramètres le username.
-		//       Elle retourne soit une implémentation de AbstactTableModel ou un ResultSet.
-		//       Dans le second cas, la transformation en TableModel sera effectuée ici.
-		return null;
+	public ResultTableModel getExpertHistorique(){
+		ResultSet res = sql.getExpertHistory(username);
+		return new ResultTableModel(res);
 	}
 	
 	
 	
-	////// Lorsqu'on créer le VendeurPanel
+	////// Lorsqu'on créer le AnnonceurPanel
 	
 	// Vérifier si l'utilisateur est un vendeur
-	public boolean checkIfVendeur(){
-		boolean res = true;
-		// TODO: Appeler la méthode de SQLHelper qui vérifie si un utilisateur est vendeur.
-		//       On lui donne en paramètre le username. Elle retourne true/false.
-		return res;
+	public boolean checkIfAnnonceur(){
+		return sql.isSeller(username);
 	}
 	
 	// Vérifier si l'utilisateur a des produits non vendus dont la date est expirée.
-	// Dans ce cas si on retourne directement le ResultSet qui devrait contenir le nom des produits
-	// expirés ainsi que la date d'expiration. Ce sera plus simple pour l'affichage.
 	public ResultSet checkExpiredProducts(){
-		// TODO: Appeler la méthode de SQLHelper qui récupère les produits expirés pour un utilisateur.
-		//       On lui passe en paramètre le username et la date actuelle.
-		return null;
+		return sql.getExpiredItems(username);
 	}
 	
 	//Récupérer les produits actuellement mis vente par l'utilisateur.
-	public TableModel getVendeurProducts(){
-		// TODO: Appeler la méthode de SQLHelper qui récupère les produits d'un vendeur.
-		//       On lui passe en paramètre le username. Elle peut retourner soit ResultSet ou TableModel.
-		return null;
+	public ResultTableModel getVendeurProducts(){
+		ResultSet res = sql.getUnsoldItems(username);
+		return new ResultTableModel(res);
 	}
 	
 	//Récupérer l'historique des produits vendus par l'utilisateur.
-	public TableModel getVendeurHistorique(){
-		// TODO: Appeler la méthode de SQLHelper qui récupère les produits vendus.
-		//       On lui passe en parmètre le username.
-		return null;
+	public ResultTableModel getVendeurHistorique(){
+		ResultSet res = sql.getSellerHistory(username);
+		return new ResultTableModel(res);
 	}
-	
 	
 	
 	///// Lorsqu'on crée le AcheteurPanel.
 	
 	// Vérifier si l'utilisateur est un Acheteur.
 	public boolean checkIfAcheteur(){
-		boolean res = true;
-		// TODO: Appeler la méthode de SQLHelper qui vérifie si un utilisateur est Acheteur.
-		//       On lui donne en paramètre le username. Elle retourne true/false.
-		return res;
+		return sql.isBuyer(username);
 	}
 	
 	// Récupérer la liste des catégories disponibles pour le ComboBox (menu déroulant).
@@ -160,24 +136,21 @@ public class MainPanel extends JPanel {
 	}
 	
 	// Récupérer le tableau de tous les produits en vente.
-	public TableModel getAllProducts(){
-		// TODO: Appeler la méthode de SQLHelper qui récupère tous les produits actuellement en vente.
-		//       Aucun paramètre. Elle peut retourner soit ResultSet ou TableModel.
-		return null;
+	public ResultTableModel getAllProducts(){
+		ResultSet res = sql.getAvailableItems();
+		return new ResultTableModel(res);
 	}
 	
 	//Récupérer le tableau des offres faites par l'utilisateur.
-	public TableModel getAcheteurOffers(){
+	public ResultTableModel getAcheteurOffers(){
 		// TODO: Appeler la méthode de SQLHelper qui récupère les offres faites par l'utilisateur.
-		//       On passe en paramètre le username. Elle retourne soit ResultSet ou TableModel.
 		return null;
 	}
 	
 	// Récupérer l'historique d'achat de l'utilisateur.
-	public TableModel getAcheteurHistorique(){
-		// TODO: Appeler la méthode de SQLHelper qui récupère l'historique des achats de l'utilisateur.
-		//       On passe en paramètre le username. Elle retourne soit ResultSet ou TableModel.
-		return null;
+	public ResultTableModel getAcheteurHistorique(){
+		ResultSet res = sql.getBuyerHistory(username);
+		return new ResultTableModel(res);
 	}
 
 
@@ -185,10 +158,9 @@ public class MainPanel extends JPanel {
 	///// Losqu'on séléctionne un produit dans VendeurPanel.
 	
 	// Récupérer les offres faites sur un produit.
-	public TableModel getOffersOnProduct(String productName){
-		// TODO: Appeler la méthode dans SQLHelper qui récupère les offres sur le produit X.
-		//       On passe en paramètre productName. Elle retourne soit ResultSet ou TableModel.
-		return null;
+	public ResultTableModel getOffersOnProduct(String productName){
+		ResultSet res = sql.getProductOffers(username, productName);
+		return new ResultTableModel(res);
 	}
 	
 	
