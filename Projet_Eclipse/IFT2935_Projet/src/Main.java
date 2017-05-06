@@ -12,18 +12,18 @@ public class Main {
 	
 	public static void main(String[] args){
 		
-		UIManager.put("Label.font", new FontUIResource(new Font("Dialog", Font.PLAIN, 18)));
-	    UIManager.put("Button.font", new FontUIResource(new Font("Dialog", Font.BOLD, 18)));
-	    UIManager.put("TextField.font", new FontUIResource(new Font("Dialog", Font.PLAIN, 18)));
-	    UIManager.put("PasswordField.font", new FontUIResource(new Font("Dialog", Font.PLAIN, 18)));
-	    UIManager.put("TabbedPane.font", new FontUIResource(new Font("Dialog", Font.PLAIN, 18)));
-	    UIManager.put("ComboBox.font", new FontUIResource(new Font("Dialog", Font.PLAIN, 18)));
-	    UIManager.put("Table.font", new FontUIResource(new Font("Dialog", Font.PLAIN, 18)));
+		UIManager.put("Label.font", new FontUIResource(new Font("Dialog", Font.BOLD, 14)));
+	    UIManager.put("Button.font", new FontUIResource(new Font("Dialog", Font.BOLD, 14)));
+	    UIManager.put("TextField.font", new FontUIResource(new Font("Dialog", Font.PLAIN, 14)));
+	    UIManager.put("PasswordField.font", new FontUIResource(new Font("Dialog", Font.PLAIN, 14)));
+	    UIManager.put("TabbedPane.font", new FontUIResource(new Font("Dialog", Font.PLAIN, 14)));
+	    UIManager.put("ComboBox.font", new FontUIResource(new Font("Dialog", Font.PLAIN, 14)));
+	    UIManager.put("Table.font", new FontUIResource(new Font("Dialog", Font.PLAIN, 14)));
 
 		JFrame frame = new JFrame("Projet");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setContentPane(new MainPanel(frame));
-		frame.setSize(new Dimension(800, 600));;
+		frame.setSize(new Dimension(400, 400));;
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}

@@ -28,7 +28,7 @@ public class MainPanel extends JPanel {
 		sql = new SQLHelper();
 		login = new LoginPanel(this);
 		tabs = new JTabbedPane();
-		this.setPreferredSize(new Dimension(950, 900));
+		this.setPreferredSize(new Dimension(800, 600));
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 1;
@@ -42,14 +42,11 @@ public class MainPanel extends JPanel {
 	// Si ok créer les tabs, sinon afficher un message d'erreur
 	public void checkUserPassword(String username, String password){
 		
-		boolean ok = true;
-		ok = sql.isValidLogin(username, password);
+		boolean ok = sql.isValidLogin(username, password);
 		
 		if(ok){
 			this.username = username;
-			tabs.add("Acheteur", new JScrollPane(new AcheteurPanel(this)));
-			tabs.addTab("Annonceur", new JScrollPane(new AnnonceurPanel(this)));
-			tabs.add("Expert", new JScrollPane(new ExpertPanel(this)));
+			makeTabs();
 			this.removeAll();
 			this.setLayout(new BorderLayout());
 			this.add(tabs, BorderLayout.CENTER);
@@ -70,6 +67,18 @@ public class MainPanel extends JPanel {
 		}
 	}
 	
+	
+	private void makeTabs(){
+		if(this.checkIfAcheteur()){
+			tabs.add("Acheteur", new JScrollPane(new AcheteurPanel(this)));
+		}
+		if(this.checkIfAnnonceur()){
+			tabs.addTab("Annonceur", new JScrollPane(new AnnonceurPanel(this)));
+		}
+		if(checkIfExpert()){
+			tabs.add("Expert", new JScrollPane(new ExpertPanel(this)));
+		}
+	}
 	
 	
 	////// Lorsqu'on créer le ExpertPanel

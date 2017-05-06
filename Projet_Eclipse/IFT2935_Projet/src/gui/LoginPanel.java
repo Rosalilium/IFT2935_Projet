@@ -47,13 +47,10 @@ public class LoginPanel extends JPanel {
 		this.add(pan3);
 		
 		send.addActionListener(new ActionListener(){
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				mainpanel.checkUserPassword(username.getText(), password.getSelectedText());
-				
+				mainpanel.checkUserPassword(username.getText(), String.valueOf(password.getPassword()));
 			}
-			
 		});
 		
 	}
