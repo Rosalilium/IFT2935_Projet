@@ -1,9 +1,12 @@
 package gui;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableModel;
 
 import sql.ResultTableModel;
@@ -27,13 +30,33 @@ public class MainPanel extends JPanel {
 		frame = f;
 		sql = new SQLHelper();
 		login = new LoginPanel(this);
+		login.setBorder(new EmptyBorder(10,10,10,10));
 		tabs = new JTabbedPane();
+		JButton info = new JButton("?");
+		
 		this.setPreferredSize(new Dimension(800, 600));
 		this.setLayout(new GridBagLayout());
+		GridBagConstraints gc = new GridBagConstraints();
+		gc.gridx = 3;
+		gc.gridy = 0;
+		this.add(info, gc);
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 1;
-		c.gridy = 1;
+		c.gridy = 2;
 		this.add(login, c);
+		
+		info.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JOptionPane.showMessageDialog(frame,
+					    "Utilisateur 1 : \n" 
+					    		+ "Pseudonyme = Nanaxo \n" 
+					    		+ "Mot de passe = hhjj \n\n" + 
+					    		"Utilisateur 2 : \n" 
+					    		+ "Pseudonyme = ... \n"
+					    		+ "Mot de passe = ...");
+			}
+		});
 	}
 	
 	
