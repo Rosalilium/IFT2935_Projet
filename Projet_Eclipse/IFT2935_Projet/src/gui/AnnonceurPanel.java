@@ -1,7 +1,10 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -40,14 +43,31 @@ public class AnnonceurPanel extends JPanel implements ListSelectionListener{
 		pan1.setBorder(new EmptyBorder(10,10,10,10));
 		JPanel hPanel = this.makeHistoPanel();
 		
-		//TODO: check for expired products
+		JPanel ePanel = makeExpiredPanel();
 		
-		//warning = new JLabel("WARNING");
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		//this.add(warning);
+		this.add(ePanel);
 		this.add(pan1);
 		this.add(hPanel);
 		
+	}
+	
+	private JPanel makeExpiredPanel(){
+		JPanel ePanel = new JPanel(new BorderLayout());
+		ResultSet res = mainpanel.checkExpiredProducts();
+		if(res != null){
+			try {
+				while(res.next()){
+					String w = "Attention le produit " +res.getString(1) + " est expire";
+					JLabel warning = new JLabel(w);
+					warning.setForeground(Color.red);
+					ePanel.add(warning);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return ePanel;
 	}
 	
 	private JPanel makeVentePanel(){
