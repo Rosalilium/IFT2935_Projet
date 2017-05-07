@@ -1,4 +1,15 @@
-Projet final du cours IFT2935
+PROJET 2 : GESTION D'UN SYSTEME DE VENTE CONDITIONNELLE
+APPLICATION JAVA AVEC GUI
 
-Le dossier Projet_Eclipse peut être directement importé dans Eclipse.
-(Pour le moment le projet ne contient aucune classe.)
+PAR
+ROSALIE CLAVEL
+AMELIE LACOMBE ROBILLARD
+VIVIANNE NGUYEN-DONG
+ZOHREH KHEIRINIA
+
+TRAVAIL PRESENTE A MOHAMED AYMEN SAIED
+DANS LE CADRE DU COURS IFT2935 BASES DE DONNEES
+MAI 2017
+
+Le dossier projet peut etre importe dans Eclipse ou Idea.
+L'application utilise la base de donnees MySQL ACHATENLIGNE storee sur les serveurs du diro.
