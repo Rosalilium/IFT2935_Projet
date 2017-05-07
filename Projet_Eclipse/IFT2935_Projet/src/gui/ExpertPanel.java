@@ -37,7 +37,7 @@ public class ExpertPanel extends JPanel {
 		ResultTableModel res = mainpanel.getProductsToEstimate();
 		objectResult = new JTable(res);
 		objectsScroll = new JScrollPane(objectResult);
-		objectsScroll.setPreferredSize(new Dimension(300,150));
+		objectsScroll.setPreferredSize(new Dimension(300,100));
 		
 		tPanel.add(objects);
 		tPanel.add(objectsScroll);
@@ -52,7 +52,7 @@ public class ExpertPanel extends JPanel {
 		ResultTableModel res = mainpanel.getExpertHistorique();
 		histoResult = new JTable(res);
 		histoScroll = new JScrollPane(histoResult);
-		histoScroll.setPreferredSize(new Dimension(300,150));
+		histoScroll.setPreferredSize(new Dimension(300,100));
 		
 		tPanel.add(historique);
 		tPanel.add(histoScroll);

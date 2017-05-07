@@ -79,13 +79,23 @@ public class SQLHelper {
 
 		return results;
 	}
+	
+	/**
+	 *  Offres faites par un usager
+	 */
+	public ResultSet getBuyerOffers(String username){
+		
+		ResultSet results = query("SELECT nom_produit, annonceur_username, prix_propose FROM Produit JOIN  Offre ON Produit.id = Offre.id WHERE usernameAch='" + username + "' AND etat='dispo'");
+		
+		return results;
+	}
 
 	/**
 	 *	Recherche de tous les produits qui sont encore disponibles pour l`achat
 	 */
 	public ResultSet getAvailableItems() {
 
-		ResultSet results = query("SELECT nom_produit, annonceur_username FROM Produit WHERE ((etat='dispo') AND (date_exp > CURDATE())) ;");
+		ResultSet results = query("SELECT nom_produit, prix_souhaite, annonceur_username FROM Produit WHERE ((etat='dispo') AND (date_exp > CURDATE())) ;");
 
 		return results;
 	}
@@ -95,7 +105,7 @@ public class SQLHelper {
 	 */
 	public ResultSet getItemsCheaperThan(int price) {
 
-		ResultSet results = query("SELECT nom_produit, annonceur_username FROM Produit WHERE ((prix_souhaite < " + price + ") AND (etat='dispo') AND (date_exp > CURDATE()));");
+		ResultSet results = query("SELECT nom_produit, prix_souhaite, annonceur_username FROM Produit WHERE ((prix_souhaite < " + price + ") AND (etat='dispo') AND (date_exp > CURDATE()));");
 
 		return results;
 	}
@@ -105,11 +115,34 @@ public class SQLHelper {
 	 */
 	public ResultSet getItemsByCategory(String category) {
 
-		ResultSet results = query("SELECT nom_produit, annonceur_username FROM Produit WHERE ( (nom_categorie ='" + category + "') AND (etat='dispo') AND (date_exp > CURDATE()))");
+		ResultSet results = query("SELECT nom_produit, prix_souhaite, annonceur_username FROM Produit WHERE ( (nom_categorie ='" + category + "') AND (etat='dispo') AND (date_exp > CURDATE()))");
 
 		return results;
 	}
+	
+	/**
+	 *  Recherche de produits selon la catégorie et le prix
+	 */
+	public ResultSet getItemsByCategoryAndPrice(String category, int price){
+		
+		ResultSet results = query("SELECT nom_produit, prix_souhaite, annonceur_username FROM Produit "
+						+ "WHERE ((prix_souhaite < " + price + ") AND (nom_categorie ='" + category + "') "
+						+ "AND (etat='dispo') AND (date_exp > CURDATE()));");
+		
+		return results;
+	}
+	
+	/**
+	 *  Récuperer les noms des catégories existantes
+	 */
+	public ResultSet getCategoryNames(){
+		
+		ResultSet results = query("SELECT nom_categorie FROM Categorie;");
+		
+		return results;
+	}
 
+	
 	// Methodes pour l'onglet Annonceur ////////////////////////////////////////////////////////////////////////////////////
 
 	/**

@@ -3,7 +3,9 @@ package gui;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Array;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -49,12 +51,9 @@ public class MainPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				JOptionPane.showMessageDialog(frame,
-					    "Utilisateur 1 : \n" 
+					    "Utilisateur : \n" 
 					    		+ "Pseudonyme = Nanaxo \n" 
-					    		+ "Mot de passe = hhjj \n\n" + 
-					    		"Utilisateur 2 : \n" 
-					    		+ "Pseudonyme = ... \n"
-					    		+ "Mot de passe = ...");
+					    		+ "Mot de passe = hhjj");
 			}
 		});
 	}
@@ -83,7 +82,7 @@ public class MainPanel extends JPanel {
 			error.setForeground(Color.red);
 			GridBagConstraints gc = new GridBagConstraints();
 			gc.gridx = 1;
-			gc.gridy = 2;
+			gc.gridy = 3;
 			this.add(error, gc);
 			this.revalidate();
 			this.repaint();
@@ -104,21 +103,28 @@ public class MainPanel extends JPanel {
 	}
 	
 	
-	////// Lorsqu'on créer le ExpertPanel
+	// Création du ExpertPanel ///////////////////////////////////////////////////////////////////
 
-	// Vérifier si l'utilisateur est un expert
+	/**
+	 * Vérifie si l'utilisateur est un expert
+	 */
 	public boolean checkIfExpert(){
 		return sql.isExpert(username);
 	}
 	
-	// Récupérer le tableau des produits à estimés faisant partie de la catégorie d'expertise
-	// de l'utilisateur.
+	/**
+	 * Récupére le tableau des produits à estimés faisant partie de la catégorie d'expertise
+	 * de l'utilisateur.
+	 */
 	public ResultTableModel getProductsToEstimate(){
 		ResultSet res = sql.getUnevaluatedProducts(username);
 		return new ResultTableModel(res);
 	}
 	
-	// Récupérer le tableau des produits estimés par l'utilisateur.
+	
+	/**
+	 * Récupére le tableau des produits estimés par l'utilisateur.
+	 */
 	public ResultTableModel getExpertHistorique(){
 		ResultSet res = sql.getExpertHistory(username);
 		return new ResultTableModel(res);
@@ -126,60 +132,74 @@ public class MainPanel extends JPanel {
 	
 	
 	
-	////// Lorsqu'on créer le AnnonceurPanel
+	// Création du AnnonceurPanel ///////////////////////////////////////////////////////////////////////
 	
-	// Vérifier si l'utilisateur est un vendeur
+	/**
+	 * Vérifie si l'utilisateur est un vendeur
+	 */
 	public boolean checkIfAnnonceur(){
 		return sql.isSeller(username);
 	}
 	
-	// Vérifier si l'utilisateur a des produits non vendus dont la date est expirée.
+	/**
+	 * Vérifie si l'utilisateur a des produits non vendus dont la date est expirée.
+	 */
 	public ResultSet checkExpiredProducts(){
 		return sql.getExpiredItems(username);
 	}
 	
-	//Récupérer les produits actuellement mis vente par l'utilisateur.
+	/**
+	 * Récupére les produits actuellement mis vente par l'utilisateur.
+	 */
 	public ResultTableModel getVendeurProducts(){
 		ResultSet res = sql.getUnsoldItems(username);
 		return new ResultTableModel(res);
 	}
 	
-	//Récupérer l'historique des produits vendus par l'utilisateur.
+	/**
+	 * Récupére l'historique des produits vendus par l'utilisateur.
+	 */
 	public ResultTableModel getVendeurHistorique(){
 		ResultSet res = sql.getSellerHistory(username);
 		return new ResultTableModel(res);
 	}
 	
 	
-	///// Lorsqu'on crée le AcheteurPanel.
+	// Création du AcheteurPanel /////////////////////////////////////////////////////////////////
 	
-	// Vérifier si l'utilisateur est un Acheteur.
+	/**
+	 * Vérifie si l'utilisateur est un Acheteur.
+	 */
 	public boolean checkIfAcheteur(){
 		return sql.isBuyer(username);
 	}
 	
-	// Récupérer la liste des catégories disponibles pour le ComboBox (menu déroulant).
-	public String[] getCategories(){
-		// TODO: Appeler une méthode de SQLHelper qui récupère les noms des catégories existantes.
-		//       Aucun paramètre. L'idéal serait que cette méthode retourne un Array de String
-		//       réprésentant chacune le nom d'une catégorie. Mais ça peut également être un ResultSet
-		//       et on fera le String[] ici.
-		return null;
+	/**
+	 * Récupére la liste des catégories disponibles pour le ComboBox (menu déroulant).
+	 */
+	public ResultSet getCategories(){
+		return sql.getCategoryNames();
 	}
 	
-	// Récupérer le tableau de tous les produits en vente.
+	/**
+	 * Récupére le tableau de tous les produits en vente.
+	 */
 	public ResultTableModel getAllProducts(){
 		ResultSet res = sql.getAvailableItems();
 		return new ResultTableModel(res);
 	}
 	
-	//Récupérer le tableau des offres faites par l'utilisateur.
+	/**
+	 * Récupére le tableau des offres faites par l'utilisateur.
+	 */
 	public ResultTableModel getAcheteurOffers(){
-		// TODO: Appeler la méthode de SQLHelper qui récupère les offres faites par l'utilisateur.
-		return null;
+		ResultSet res = sql.getBuyerOffers(username);
+		return new ResultTableModel(res);
 	}
 	
-	// Récupérer l'historique d'achat de l'utilisateur.
+	/**
+	 * Récupére l'historique d'achat de l'utilisateur.
+	 */
 	public ResultTableModel getAcheteurHistorique(){
 		ResultSet res = sql.getBuyerHistory(username);
 		return new ResultTableModel(res);
@@ -187,27 +207,37 @@ public class MainPanel extends JPanel {
 
 
 	
-	///// Losqu'on séléctionne un produit dans VendeurPanel.
+	// Losqu'on séléctionne un produit dans VendeurPanel. ///////////////////////////////////////
 	
-	// Récupérer les offres faites sur un produit.
+	/**
+	 * Récupérer les offres faites sur un produit.
+	 */
 	public ResultTableModel getOffersOnProduct(String productName){
 		ResultSet res = sql.getProductOffers(username, productName);
 		return new ResultTableModel(res);
 	}
 	
 	
-	//// Losqu'on fait une recherche dans AcheteurPanel.
+	// Losqu'on fait une recherche dans AcheteurPanel. ///////////////////////////////////////////
 	
-	// Récupérer les produits disponibles selon la séléction.
-	public TableModel searchProducts(String categorie, double price){
-		// TODO: Appeler la méthode qui effectue la recherche dans SQLHelper.
-		//       On lui passe en paramètre categorie et price.
-		
-		// Si un des critères n'est pas spécifié on modifira les paramètres ici.
-		// Si price n'est pas spécifié on passera en paramètre un nombre très grand.
-		// La catégorie par défaut sera "Toutes". 
-		// Il faut alors adapter la requête SQL en conséquence.
-		return null;
+	/**
+	 * Récupérer les produits disponibles selon la séléction.
+	 */
+	public ResultTableModel searchProducts(String category, int price){
+		ResultSet res = null;
+		if(!category.equalsIgnoreCase("Toutes") && price != 0){
+			res = sql.getItemsByCategoryAndPrice(category, price);
+		}
+		else if(category.equalsIgnoreCase("Toutes") && price != 0){
+			res = sql.getItemsCheaperThan(price);
+		}
+		else if(!category.equalsIgnoreCase("Toutes") && price == 0){
+			res = sql.getItemsByCategory(category);
+		}
+		else{
+			res = sql.getAvailableItems();
+		}
+		return new ResultTableModel(res);
 	}
 
 }
