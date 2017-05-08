@@ -74,8 +74,7 @@ public class SQLHelper {
 	 *	Historique d'achat d'un usager
 	 */
 	public ResultSet getBuyerHistory(String username) {
-
-		ResultSet results = query("SELECT nom_produit, annonceur_username FROM Produit JOIN  Offre ON Produit.id = Offre.id WHERE usernameAch='" + username + "' AND etat='vendu'");
+		ResultSet results = query("SELECT nom_produit, prix_propose, annonceur_username, telephone, adresse_facturation FROM Produit INNER JOIN Usager ON annonceur_username = Usager.username INNER JOIN Annonceur ON annonceur_username = Annonceur.username INNER JOIN Offre ON Produit.id = Offre.id WHERE usernameAch='" + username + "' AND etat='vendu'");
 
 		return results;
 	}
@@ -85,7 +84,7 @@ public class SQLHelper {
 	 */
 	public ResultSet getBuyerOffers(String username){
 		
-		ResultSet results = query("SELECT nom_produit, annonceur_username, prix_propose FROM Produit JOIN  Offre ON Produit.id = Offre.id WHERE usernameAch='" + username + "' AND etat='dispo'");
+		ResultSet results = query("SELECT nom_produit, prix_propose, annonceur_username, telephone, adresse_facturation FROM Produit INNER JOIN Offre ON Produit.id = Offre.id INNER JOIN Usager ON annonceur_username = Usager.username INNER JOIN Annonceur ON annonceur_username = Annonceur.username WHERE usernameAch='" + username + "' AND etat='dispo' ");
 		
 		return results;
 	}
@@ -181,7 +180,7 @@ public class SQLHelper {
 	 */
 	public ResultSet getSellerHistory(String username) {
 
-		ResultSet results = query("SELECT nom_produit, prix_souhaite FROM Produit WHERE ((annonceur_username='" + username + "') AND (etat='vendu'))");
+		ResultSet results = query("SELECT nom_produit, prix_offre, acheteur_username, telephone, adresse_livraison FROM Produit INNER JOIN (SELECT id, usernameAch AS acheteur_username, MAX(prix_propose) AS prix_offre FROM Offre GROUP BY id) AS Temp ON Produit.id = Temp.id INNER JOIN Usager ON acheteur_username = Usager.username INNER JOIN Acheteur ON acheteur_username = Acheteur.username WHERE ((annonceur_username='" + username + "') AND (etat='vendu')) \n");
 
 		return results;
 	}
@@ -214,7 +213,7 @@ public class SQLHelper {
 	 */
 	public ResultSet getUnevaluatedProducts(String expert) {
 
-		ResultSet results = query("SELECT nom_produit,date_exp FROM Produit WHERE (expert_username='" + expert + "' AND prix_estime='0')");
+		ResultSet results = query("SELECT nom_produit, prix_souhaite, annonceur_username, telephone, adresse_facturation FROM Produit INNER JOIN Usager ON annonceur_username = Usager.username INNER JOIN Annonceur ON annonceur_username = Annonceur.username WHERE (nom_categorie = ANY(SELECT nom_categorie FROM Expertise WHERE usernameExp = '" + expert + "') AND prix_estime='0')");
 
 		return results;
 	}
@@ -224,7 +223,7 @@ public class SQLHelper {
 	 */
 	public ResultSet getExpertHistory(String username) {
 
-		ResultSet results = query("SELECT nom_produit,prix_estime,etat FROM Produit WHERE (etat='vendu' AND expert_username='" + username + "')");
+		ResultSet results = query("SELECT nom_produit, prix_estime, prix_vendu, annonceur_username, telephone, adresse_facturation FROM Produit INNER JOIN (SELECT id, usernameAch AS acheteur_username, MAX(prix_propose) AS prix_vendu FROM Offre GROUP BY id) AS Temp ON Produit.id = Temp.id INNER JOIN Usager ON annonceur_username = Usager.username INNER JOIN Annonceur ON annonceur_username = Annonceur.username WHERE (etat='vendu' AND expert_username='" + username + "')");
 
 		return results;
 	}
