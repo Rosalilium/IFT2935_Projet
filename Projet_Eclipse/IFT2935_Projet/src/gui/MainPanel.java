@@ -36,7 +36,7 @@ public class MainPanel extends JPanel {
 		tabs = new JTabbedPane();
 		JButton info = new JButton("?");
 		
-		this.setPreferredSize(new Dimension(800, 600));
+		this.setPreferredSize(new Dimension(1250, 600));
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridx = 3;
